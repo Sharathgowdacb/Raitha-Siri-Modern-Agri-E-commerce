@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FarmFresh Register</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWix+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkR4j8yT9Tj0UjzB6+QcmGeXjr6UIz+YdX2Q=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <style>
+      body {
+        font-family: 'Poppins', sans-serif;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(22px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate-fade-up {
+        animation: fadeUp 700ms ease-out both;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-slate-950">
+    <main class="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+      <section
+        class="relative hidden lg:flex items-end p-12 bg-cover bg-center"
+        style="background-image: url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1800&q=80');"
+      >
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-emerald-900/25"></div>
+        <div class="relative z-10 max-w-xl text-white">
+          <span class="inline-flex items-center gap-2 text-xs tracking-[0.2em] uppercase bg-white/15 border border-white/20 rounded-full px-4 py-2 mb-5">
+            <i class="fa-solid fa-leaf"></i>
+            Join FarmFresh
+          </span>
+          <h1 class="text-4xl xl:text-5xl font-bold leading-tight">Grow, Sell, and Shop Fresh</h1>
+          <p class="mt-4 text-white/85 text-base xl:text-lg">Create your account and connect farmers with buyers in one trusted marketplace.</p>
+        </div>
+      </section>
+
+      <section class="relative flex items-center justify-center p-5 sm:p-8 bg-[radial-gradient(circle_at_20%_20%,#34d399_0%,#0f172a_45%,#020617_100%)]">
+        <div class="absolute inset-0 pointer-events-none">
+          <div class="absolute -top-12 -left-8 h-36 w-36 rounded-full bg-emerald-400/20 blur-2xl"></div>
+          <div class="absolute bottom-8 right-4 h-44 w-44 rounded-full bg-cyan-400/15 blur-2xl"></div>
+        </div>
+
+        <div class="animate-fade-up relative z-10 w-full max-w-md rounded-3xl border border-white/25 bg-white/10 backdrop-blur-xl shadow-2xl p-6 sm:p-8 text-white">
+          <div class="mb-6">
+            <p class="text-sm text-emerald-200">Create your account</p>
+            <h2 class="text-2xl font-semibold mt-1">Sign up</h2>
+          </div>
+
+          <div class="mb-6">
+            <p class="text-sm text-white/75 mb-3">Register as</p>
+            <div class="grid grid-cols-2 gap-2 bg-white/10 p-1 rounded-xl">
+              <button id="tabFarmer" type="button" data-role="Farmer" class="role-tab rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300">
+                <i class="fa-solid fa-tractor mr-2"></i>Farmer
+              </button>
+              <button id="tabBuyer" type="button" data-role="Buyer" class="role-tab rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300">
+                <i class="fa-solid fa-cart-shopping mr-2"></i>Buyer
+              </button>
+            </div>
+          </div>
+
+          <form action="{% url 'store:register' %}" method="post" class="space-y-4">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+              <div class="rounded-xl border border-rose-300/40 bg-rose-500/20 text-rose-100 px-3 py-2 text-sm">
+                {{ form.non_field_errors|striptags }}
+              </div>
+            {% endif %}
+
+            <input type="checkbox" id="isFarmerInput" name="is_farmer" class="hidden" {% if form.data.is_farmer %}checked{% endif %} />
+
+            <div>
+              <label for="username" class="block text-sm mb-1 text-white/90">Username</label>
+              <input id="username" name="username" type="text" value="{{ form.data.username|default:'' }}" class="w-full rounded-xl bg-white/10 border border-white/30 px-4 py-3 text-sm placeholder:text-white/45 focus:outline-none focus:ring-2 focus:ring-emerald-300/70 focus:border-emerald-200/70 transition" placeholder="Choose a username" />
+              <p class="mt-1 text-xs text-rose-200/85">{{ form.username.errors|striptags|default:' ' }}</p>
+            </div>
+
+            <div>
+              <label for="email" class="block text-sm mb-1 text-white/90">Email</label>
+              <input id="email" name="email" type="email" value="{{ form.data.email|default:'' }}" class="w-full rounded-xl bg-white/10 border border-white/30 px-4 py-3 text-sm placeholder:text-white/45 focus:outline-none focus:ring-2 focus:ring-emerald-300/70 focus:border-emerald-200/70 transition" placeholder="you@example.com" />
+              <p class="mt-1 text-xs text-rose-200/85">{{ form.email.errors|striptags|default:' ' }}</p>
+            </div>
+
+            <div>
+              <label for="password1" class="block text-sm mb-1 text-white/90">Password</label>
+              <input id="password1" name="password1" type="password" class="w-full rounded-xl bg-white/10 border border-white/30 px-4 py-3 text-sm placeholder:text-white/45 focus:outline-none focus:ring-2 focus:ring-emerald-300/70 focus:border-emerald-200/70 transition" placeholder="Create a secure password" />
+              <p class="mt-1 text-xs text-rose-200/85">{{ form.password1.errors|striptags|default:' ' }}</p>
+            </div>
+
+            <div>
+              <label for="password2" class="block text-sm mb-1 text-white/90">Confirm Password</label>
+              <input id="password2" name="password2" type="password" class="w-full rounded-xl bg-white/10 border border-white/30 px-4 py-3 text-sm placeholder:text-white/45 focus:outline-none focus:ring-2 focus:ring-emerald-300/70 focus:border-emerald-200/70 transition" placeholder="Confirm your password" />
+              <p class="mt-1 text-xs text-rose-200/85">{{ form.password2.errors|striptags|default:' ' }}</p>
+            </div>
+
+            <button type="submit" class="w-full mt-2 rounded-xl py-3 text-sm font-semibold bg-gradient-to-r from-emerald-400 via-green-500 to-lime-500 text-slate-900 shadow-lg shadow-emerald-900/35 hover:scale-[1.01] hover:shadow-emerald-300/35 active:scale-[0.99] transition-all duration-300">
+              Create Account
+            </button>
+
+            <p class="text-center text-sm text-white/80 pt-1">
+              Already have an account?
+              <a href="{% url 'store:login' %}" class="text-emerald-200 font-medium hover:text-emerald-100 transition">Login</a>
+            </p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const roleTabs = document.querySelectorAll('.role-tab');
+      const isFarmerInput = document.getElementById('isFarmerInput');
+
+      function setRegisterRole(role) {
+        roleTabs.forEach((tab) => {
+          const isActive = tab.dataset.role === role;
+          tab.classList.toggle('bg-emerald-400', isActive);
+          tab.classList.toggle('text-slate-900', isActive);
+          tab.classList.toggle('shadow-md', isActive);
+          tab.classList.toggle('bg-transparent', !isActive);
+          tab.classList.toggle('text-white/85', !isActive);
+        });
+
+        isFarmerInput.checked = role === 'Farmer';
+      }
+
+      roleTabs.forEach((tab) => {
+        tab.addEventListener('click', () => setRegisterRole(tab.dataset.role));
+      });
+
+      setRegisterRole(isFarmerInput.checked ? 'Farmer' : 'Buyer');
+    </script>
+  </body>
+</html>

@@ -1,0 +1,204 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Farmer Dashboard{% endblock %} - Farmer E-Commerce</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/heroicons@2"></script>
+    <!-- Heroicons via CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        .sidebar-active {
+            background-color: #dcfce7;
+            color: #15803d;
+            border-left: 4px solid #16a34a;
+        }
+        .card-shadow {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        .transition-smooth {
+            transition: all 0.3s ease;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="w-64 bg-white border-r border-gray-200 overflow-y-auto shadow-lg">
+            <!-- Logo Section -->
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-seedling text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-gray-900">FarmHub</h1>
+                        <p class="text-xs text-gray-500">Farmer Dashboard</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="p-4 space-y-2">
+                <!-- Dashboard -->
+                <a href="{% url 'store:farmer_dashboard' %}" 
+                   class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-smooth hover:bg-gray-100
+                   {% if request.resolver_match.url_name == 'farmer_dashboard' %}sidebar-active{% endif %}">
+                    <i class="fas fa-home text-lg"></i>
+                    <span class="font-medium">Dashboard</span>
+                </a>
+
+                <!-- Profile -->
+                <a href="{% url 'store:farmer_profile_view' %}" 
+                   class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-smooth hover:bg-gray-100
+                   {% if request.resolver_match.url_name == 'farmer_profile_view' %}sidebar-active{% endif %}">
+                    <i class="fas fa-user-circle text-lg"></i>
+                    <span class="font-medium">Profile</span>
+                </a>
+
+                <!-- Add Product -->
+                <a href="{% url 'store:farmer_product_create' %}" 
+                   class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-smooth hover:bg-gray-100
+                   {% if request.resolver_match.url_name == 'farmer_product_create' %}sidebar-active{% endif %}">
+                    <i class="fas fa-plus-circle text-lg"></i>
+                    <span class="font-medium">Add Product</span>
+                </a>
+
+                <!-- My Products -->
+                <a href="{% url 'store:farmer_product_list' %}" 
+                   class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-smooth hover:bg-gray-100
+                   {% if request.resolver_match.url_name == 'farmer_product_list' or request.resolver_match.url_name == 'farmer_product_edit' %}sidebar-active{% endif %}">
+                    <i class="fas fa-box text-lg"></i>
+                    <span class="font-medium">My Products</span>
+                </a>
+
+                <!-- Orders Received -->
+                <a href="{% url 'store:farmer_orders_received' %}"
+                   class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-smooth hover:bg-gray-100
+                   {% if request.resolver_match.url_name == 'farmer_orders_received' or request.resolver_match.url_name == 'farmer_order_approve' or request.resolver_match.url_name == 'farmer_order_reject' %}sidebar-active{% endif %}">
+                    <i class="fas fa-inbox text-lg"></i>
+                    <span class="font-medium">Orders Received</span>
+                </a>
+
+                <!-- Settings -->
+                <a href="{% url 'store:farmer_settings_view' %}" 
+                   class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-smooth hover:bg-gray-100
+                   {% if request.resolver_match.url_name == 'farmer_settings_view' %}sidebar-active{% endif %}">
+                    <i class="fas fa-cog text-lg"></i>
+                    <span class="font-medium">Settings</span>
+                </a>
+
+                <!-- Divider -->
+                <div class="my-4 border-t border-gray-200"></div>
+
+                <!-- Back to Store -->
+                <a href="{% url 'store:home' %}" 
+                   class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-smooth hover:bg-gray-100 text-gray-600">
+                    <i class="fas fa-store text-lg"></i>
+                    <span class="font-medium">Visit Store</span>
+                </a>
+
+                <!-- Logout -->
+                <a href="{% url 'store:logout' %}" 
+                   class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-smooth hover:bg-red-50 text-red-600">
+                    <i class="fas fa-sign-out-alt text-lg"></i>
+                    <span class="font-medium">Logout</span>
+                </a>
+            </nav>
+
+            <!-- Profile Preview (Footer) -->
+            <div class="absolute bottom-0 w-64 p-4 border-t border-gray-200 bg-gray-50">
+                <div class="flex items-center space-x-3">
+                    {% if user.farmer_profile.profile_photo %}
+                        <img src="{{ user.farmer_profile.profile_photo.url }}" 
+                             alt="{{ user.farmer_profile.full_name }}"
+                             class="w-10 h-10 rounded-full object-cover">
+                    {% else %}
+                        <div class="w-10 h-10 rounded-full bg-green-200 flex items-center justify-center">
+                            <i class="fas fa-user text-green-600"></i>
+                        </div>
+                    {% endif %}
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold text-gray-900 truncate">{{ user.farmer_profile.full_name }}</p>
+                        <p class="text-xs text-gray-500 truncate">{{ user.email }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Header -->
+            <header class="bg-white border-b border-gray-200 px-8 py-4 shadow-sm">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">{% block page_title %}Welcome{% endblock %}</h2>
+                        <p class="text-sm text-gray-500 mt-1">{% block page_subtitle %}Manage your farm products and profile{% endblock %}</p>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <!-- Theme Toggle (Future) -->
+                        <button onclick="toggleTheme()" class="p-2 hover:bg-gray-100 rounded-lg transition-smooth" title="Toggle theme">
+                            <i class="fas fa-moon text-gray-600"></i>
+                        </button>
+                        <a href="{% url 'store:farmer_notifications' %}" class="p-2 hover:bg-gray-100 rounded-lg transition-smooth relative" title="Notifications">
+                            <i class="fas fa-bell text-gray-600"></i>
+                            {% if farmer_unread_notifications_count %}
+                                <span class="absolute -top-1 -right-1 min-w-[1.25rem] h-5 px-1 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                                    {{ farmer_unread_notifications_count }}
+                                </span>
+                            {% endif %}
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto">
+                <div class="p-8">
+                    <!-- Messages/Alerts -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="mb-6 p-4 rounded-lg {% if message.tags %}bg-{{ message.tags }}-100 text-{{ message.tags }}-700 border border-{{ message.tags }}-300{% else %}bg-blue-100 text-blue-700 border border-blue-300{% endif %}" 
+                                 role="alert">
+                                <div class="flex">
+                                    <i class="fas fa-check-circle mt-0.5 mr-3"></i>
+                                    <span>{{ message }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <!-- Block Content -->
+                    {% block content %}{% endblock %}
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            // Theme toggle functionality
+            const html = document.documentElement;
+            const currentMode = html.classList.contains('dark') ? 'dark' : 'light';
+            const newMode = currentMode === 'dark' ? 'light' : 'dark';
+            
+            html.classList.toggle('dark');
+            localStorage.setItem('theme', newMode);
+        }
+
+        // Initialize theme from localStorage
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

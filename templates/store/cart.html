@@ -1,0 +1,168 @@
+{% extends 'store/buyer/buyer_base.html' %}
+{% block content %}
+  <section class="max-w-6xl mx-auto">
+    <div class="mb-6 rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
+      <div class="flex items-center gap-3">
+        <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
+          <i class="fa-solid fa-basket-shopping"></i>
+        </span>
+        <div>
+          <div class="text-[11px] font-semibold uppercase tracking-wider text-emerald-600">Cart</div>
+          <h1 class="text-2xl font-semibold text-gray-900">Your Cart</h1>
+          <p class="text-sm text-gray-500">Review items and update quantities before checkout.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2">
+        <div id="cart-items-section" class="{% if not cart.items.exists %}hidden{% endif %}">
+          <div class="rounded-3xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+            <div class="p-5 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <div class="text-[11px] font-semibold uppercase tracking-wider text-emerald-600">Cart items</div>
+                <h2 class="text-lg font-semibold text-gray-900">Items in your basket</h2>
+                <p class="text-sm text-gray-500">Adjust quantity, then update or remove.</p>
+              </div>
+              <a href="{% url 'store:home' %}" class="text-sm font-medium text-green-700 hover:text-green-800">Continue shopping</a>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full min-w-[720px]">
+                <thead class="bg-gray-50">
+                  <tr class="text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    <th class="px-5 py-3">Product</th>
+                    <th class="px-5 py-3">Qty</th>
+                    <th class="px-5 py-3">Price</th>
+                    <th class="px-5 py-3">Subtotal</th>
+                    <th class="px-5 py-3">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y">
+                  {% for item in cart.items.all %}
+                    <tr data-cart-row-id="{{ item.id }}" class="align-middle hover:bg-emerald-50/40 transition">
+                      <td class="px-5 py-4">
+                        <div class="flex items-center gap-3">
+                          <div class="h-10 w-10 rounded-xl bg-green-50 text-green-700 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-leaf"></i>
+                          </div>
+                          <div class="min-w-0">
+                            <div class="font-medium text-gray-900 truncate">{{ item.product.name }}</div>
+                            <div class="text-xs text-gray-500">SKU #{{ item.product.id }}</div>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td class="px-5 py-4">
+                        <div class="inline-flex items-center rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden">
+                          <button
+                            type="button"
+                            class="px-3 py-2 hover:bg-gray-100 cart-qty-decrement"
+                            data-item-id="{{ item.id }}"
+                            data-qty-input-id="cart-item-qty-{{ item.id }}"
+                            aria-label="Decrease quantity"
+                          >
+                            <i class="fa-solid fa-minus text-xs text-gray-700"></i>
+                          </button>
+                          <input
+                            type="number"
+                            min="1"
+                            value="{{ item.quantity }}"
+                            class="w-16 text-center bg-transparent px-2 py-2 text-sm font-semibold text-gray-900 cart-item-qty"
+                            id="cart-item-qty-{{ item.id }}"
+                          />
+                          <button
+                            type="button"
+                            class="px-3 py-2 hover:bg-gray-100 cart-qty-increment"
+                            data-item-id="{{ item.id }}"
+                            data-qty-input-id="cart-item-qty-{{ item.id }}"
+                            aria-label="Increase quantity"
+                          >
+                            <i class="fa-solid fa-plus text-xs text-gray-700"></i>
+                          </button>
+                        </div>
+                      </td>
+
+                      <td class="px-5 py-4 text-sm text-gray-700">₹{{ item.product.price }}</td>
+                      <td class="px-5 py-4 text-sm font-semibold text-gray-900 cart-item-subtotal">₹{{ item.subtotal }}</td>
+                      <td class="px-5 py-4">
+                        <div class="flex items-center gap-2">
+                          <button
+                            class="cart-update-btn inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                            data-item-id="{{ item.id }}"
+                            data-qty-input-id="cart-item-qty-{{ item.id }}"
+                            data-update-url="{% url 'store:update_cart_item' item.id %}"
+                          >
+                            <i class="fa-solid fa-rotate"></i>
+                            Update
+                          </button>
+                          <button
+                            class="cart-remove-btn inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 px-3 py-2 text-sm font-semibold text-white hover:bg-red-700"
+                            data-item-id="{{ item.id }}"
+                            data-remove-url="{% url 'store:remove_cart_item' item.id %}"
+                          >
+                            <i class="fa-solid fa-trash"></i>
+                            Remove
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="cart-empty-message" class="{% if cart.items.exists %}hidden{% endif %}">
+          <div class="rounded-3xl border border-gray-200 bg-white p-10 text-center">
+            <div class="mx-auto h-12 w-12 rounded-full bg-green-100 text-green-700 flex items-center justify-center">
+              <i class="fa-solid fa-cart-shopping"></i>
+            </div>
+            <h2 class="mt-4 text-lg font-semibold text-gray-900">Your cart is empty</h2>
+            <p class="mt-2 text-sm text-gray-500">Browse products and add something fresh.</p>
+            <div class="mt-6">
+              <a href="{% url 'store:home' %}" class="inline-flex items-center justify-center rounded-xl bg-green-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-700">
+                Browse products
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="lg:col-span-1">
+        <div class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+          <div class="flex items-center gap-3">
+            <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
+              <i class="fa-solid fa-receipt"></i>
+            </span>
+            <div>
+              <h2 class="text-lg font-semibold text-gray-900">Summary</h2>
+              <p class="text-sm text-gray-500">Review totals before checkout.</p>
+            </div>
+          </div>
+
+          <div class="mt-6 rounded-2xl border border-gray-200 bg-emerald-50/60 px-4 py-3 flex items-center justify-between">
+            <span class="text-sm font-medium text-gray-700">Order total</span>
+            <span class="text-xl font-semibold text-gray-900">₹<span id="cart-total">{{ cart.total_price }}</span></span>
+          </div>
+
+          <div class="mt-6">
+            <a
+              id="checkout-btn"
+              href="{% url 'store:checkout' %}"
+              class="w-full inline-flex items-center justify-center rounded-xl bg-green-600 px-4 py-3 text-sm font-semibold text-white hover:bg-green-700 {% if not cart.items.exists %}opacity-50 pointer-events-none{% endif %}"
+              aria-disabled="{% if cart.items.exists %}false{% else %}true{% endif %}"
+            >
+              Proceed to Checkout
+            </a>
+          </div>
+
+          <div class="mt-4 text-xs text-gray-500">
+            Updating quantities updates the total automatically.
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+{% endblock %}

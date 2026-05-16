@@ -1,0 +1,59 @@
+{% extends 'store/farmer/farmer_base.html' %}
+
+{% block page_title %}Notifications{% endblock %}
+{% block page_subtitle %}Updates about orders and activity{% endblock %}
+
+{% block content %}
+  <div class="max-w-4xl mx-auto">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-bold">Notifications</h1>
+
+      {% if unread_count %}
+        <form method="post" action="{% url 'store:farmer_notifications_mark_all_read' %}">
+          {% csrf_token %}
+          <button type="submit" class="text-sm text-blue-600 hover:underline">Mark all as read</button>
+        </form>
+      {% endif %}
+    </div>
+
+    {% if notifications %}
+      <div class="space-y-3">
+        {% for n in notifications %}
+          <div class="border rounded-lg p-4 bg-white">
+            <div class="flex items-start justify-between gap-4">
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <h2 class="font-semibold truncate">{{ n.title }}</h2>
+                  {% if not n.is_read %}
+                    <span class="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">New</span>
+                  {% endif %}
+                </div>
+                {% if n.message %}
+                  <p class="text-sm text-gray-600 mt-1">{{ n.message }}</p>
+                {% endif %}
+                <p class="text-xs text-gray-500 mt-2">{{ n.created_at|date:"M j, Y, P" }}</p>
+              </div>
+
+              <div class="flex items-center gap-2 shrink-0">
+                {% if n.target_url %}
+                  <a class="text-sm text-blue-600 hover:underline" href="{{ n.target_url }}">View</a>
+                {% endif %}
+                {% if not n.is_read %}
+                  <form method="post" action="{% url 'store:farmer_notification_mark_read' n.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'store:farmer_notifications' %}">
+                    <button type="submit" class="text-sm text-gray-700 hover:underline">Mark read</button>
+                  </form>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="bg-white border rounded-lg p-6">
+        <p class="text-gray-600">No notifications yet.</p>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

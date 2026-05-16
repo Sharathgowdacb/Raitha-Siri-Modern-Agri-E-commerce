@@ -1,0 +1,280 @@
+{% extends 'store/farmer/farmer_base.html' %}
+
+{% block title %}{% if product %}Edit{% else %}Add{% endif %} Product{% endblock %}
+
+{% block page_title %}{% if product %}Edit Product{% else %}Add New Product{% endif %}{% endblock %}
+{% block page_subtitle %}{% if product %}Update your product details{% else %}Add a new product to your farm store{% endif %}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="card-shadow bg-white rounded-lg overflow-hidden">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-green-600 to-green-700 px-6 py-8 text-white">
+            <h2 class="text-2xl font-bold flex items-center space-x-2">
+                <i class="fas fa-plus-circle"></i>
+                <span>{% if product %}Edit Product{% else %}Add New Product{% endif %}</span>
+            </h2>
+            <p class="mt-2 text-green-100">Fill in the details to {% if product %}update{% else %}add{% endif %} your product</p>
+        </div>
+
+        <!-- Form -->
+        <form method="post" enctype="multipart/form-data" class="p-8">
+            {% csrf_token %}
+
+            <!-- Display Form Errors -->
+            {% if form.non_field_errors %}
+                <div class="mb-6 p-4 rounded-lg bg-red-100 text-red-700 border border-red-300">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Form Grid -->
+            <div class="space-y-6">
+                <!-- Product Image Section -->
+                <div class="pb-6 border-b border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center space-x-2">
+                        <i class="fas fa-image text-green-600"></i>
+                        <span>Product Image</span>
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Image Preview -->
+                        <div>
+                            <p class="text-sm text-gray-600 font-medium mb-2">Preview</p>
+                            <div class="relative">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-40 object-cover rounded-lg shadow-md">
+                                {% else %}
+                                    <div class="w-full h-40 bg-gray-200 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
+                                        <div class="text-center">
+                                            <i class="fas fa-image text-gray-400 text-3xl mb-2"></i>
+                                            <p class="text-gray-500 text-sm">No image yet</p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Upload Area -->
+                        <div class="md:col-span-2">
+                            <label for="id_image" class="block text-sm font-medium text-gray-700 mb-2">
+                                Upload Image
+                            </label>
+                            {{ form.image }}
+                            <p class="text-xs text-gray-500 mt-2">JPG, PNG or GIF • Maximum 5MB</p>
+                            {% if form.image.errors %}
+                                <p class="text-red-600 text-sm mt-2">{{ form.image.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Basic Information -->
+                <div class="pb-6 border-b border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center space-x-2">
+                        <i class="fas fa-info-circle text-green-600"></i>
+                        <span>Product Information</span>
+                    </h3>
+
+                    <div class="space-y-4">
+                        <!-- Product Name -->
+                        <div>
+                            <label for="id_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                Product Name <span class="text-red-600">*</span>
+                            </label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.name.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Description -->
+                        <div>
+                            <label for="id_description" class="block text-sm font-medium text-gray-700 mb-2">
+                                Description
+                            </label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.description.errors.0 }}</p>
+                            {% endif %}
+                            <p class="text-xs text-gray-500 mt-1">Add details about your product (optional)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category & Classification -->
+                <div class="pb-6 border-b border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center space-x-2">
+                        <i class="fas fa-tag text-green-600"></i>
+                        <span>Category & Classification</span>
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Category -->
+                        <div>
+                            <label for="id_category" class="block text-sm font-medium text-gray-700 mb-2">
+                                Category <span class="text-red-600">*</span>
+                            </label>
+                            {{ form.category }}
+                            {% if form.category.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.category.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Subcategory -->
+                        <div>
+                            <label for="id_subcategory" class="block text-sm font-medium text-gray-700 mb-2">
+                                Subcategory (For Dairy)
+                            </label>
+                            {{ form.subcategory }}
+                            {% if form.subcategory.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.subcategory.errors.0 }}</p>
+                            {% endif %}
+                            <p class="text-xs text-gray-500 mt-1">Only applicable for Dairy products</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing & Availability -->
+                <div class="pb-6 border-b border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center space-x-2">
+                        <i class="fas fa-money-bill text-green-600"></i>
+                        <span>Pricing & Stock</span>
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Price -->
+                        <div>
+                            <label for="id_price" class="block text-sm font-medium text-gray-700 mb-2">
+                                Price (₹) <span class="text-red-600">*</span>
+                            </label>
+                            {{ form.price }}
+                            {% if form.price.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.price.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Quantity -->
+                        <div>
+                            <label for="id_quantity" class="block text-sm font-medium text-gray-700 mb-2">
+                                Quantity (Units) <span class="text-red-600">*</span>
+                            </label>
+                            {{ form.quantity }}
+                            {% if form.quantity.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.quantity.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mt-4 p-4 rounded-lg border border-gray-200 bg-gray-50">
+                        <div class="flex items-center justify-between gap-4">
+                            <p class="text-sm text-gray-600">Estimated stock value</p>
+                            <p class="text-lg font-semibold text-gray-900">₹<span id="stock-value">0.00</span></p>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Calculated as Price × Quantity. Final buyer total depends on actual ordered quantity.</p>
+                    </div>
+                </div>
+
+                <!-- Availability Status -->
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center space-x-2">
+                        <i class="fas fa-toggle-on text-green-600"></i>
+                        <span>Availability</span>
+                    </h3>
+
+                    <div class="flex items-center space-x-4 p-4 rounded-lg border border-gray-200 bg-gray-50">
+                        <div>
+                            {{ form.is_available }}
+                        </div>
+                        <div>
+                            <label for="id_is_available" class="font-medium text-gray-900 cursor-pointer">
+                                Make this product available for sale
+                            </label>
+                            <p class="text-sm text-gray-600 mt-1">Uncheck to temporarily hide this product from buyers</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex gap-4 pt-8 border-t border-gray-200 mt-8">
+                <button type="submit" class="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-smooth font-medium flex items-center justify-center space-x-2">
+                    <i class="fas fa-save"></i>
+                    <span>{% if product %}Update Product{% else %}Add Product{% endif %}</span>
+                </button>
+                <a href="{% url 'store:farmer_product_list' %}" class="flex-1 bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 transition-smooth font-medium text-center flex items-center justify-center space-x-2">
+                    <i class="fas fa-times"></i>
+                    <span>Cancel</span>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    #id_image {
+        display: block;
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px dashed #d1d5db;
+        border-radius: 0.375rem;
+        cursor: pointer;
+        background-color: #f9fafb;
+        transition: all 0.3s ease;
+    }
+
+    #id_image:hover {
+        border-color: #10b981;
+        background-color: #f0fdf4;
+    }
+
+    #id_is_available {
+        width: 1.25rem;
+        height: 1.25rem;
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    (function () {
+        const priceEl = document.getElementById('id_price');
+        const qtyEl = document.getElementById('id_quantity');
+        const valueEl = document.getElementById('stock-value');
+
+        const categoryEl = document.getElementById('id_category');
+        const subcategoryEl = document.getElementById('id_subcategory');
+
+        function numberOrZero(value) {
+            const n = Number(value);
+            return Number.isFinite(n) ? n : 0;
+        }
+
+        function updateStockValue() {
+            const price = numberOrZero(priceEl ? priceEl.value : 0);
+            const qty = Math.max(0, Math.floor(numberOrZero(qtyEl ? qtyEl.value : 0)));
+            const total = price * qty;
+            if (valueEl) valueEl.textContent = total.toFixed(2);
+        }
+
+        function updateSubcategoryUI() {
+            if (!categoryEl || !subcategoryEl) return;
+            const isDairy = categoryEl.value === 'Dairy';
+            subcategoryEl.disabled = !isDairy;
+            if (!isDairy) {
+                subcategoryEl.value = '';
+            }
+        }
+
+        if (priceEl) priceEl.addEventListener('input', updateStockValue);
+        if (qtyEl) qtyEl.addEventListener('input', updateStockValue);
+        if (categoryEl) categoryEl.addEventListener('change', () => {
+            updateSubcategoryUI();
+        });
+
+        updateStockValue();
+        updateSubcategoryUI();
+    })();
+</script>
+{% endblock %}

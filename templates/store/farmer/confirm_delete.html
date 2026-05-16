@@ -1,0 +1,82 @@
+{% extends 'store/farmer/farmer_base.html' %}
+
+{% block title %}Delete Product{% endblock %}
+
+{% block page_title %}Delete Product{% endblock %}
+{% block page_subtitle %}This action cannot be undone{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+    <div class="card-shadow bg-white rounded-lg overflow-hidden border-l-4 border-red-600">
+        <!-- Header -->
+        <div class="bg-red-50 px-6 py-8 text-center border-b border-red-100">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 mb-4">
+                <i class="fas fa-exclamation-triangle text-red-600 text-3xl"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900">Delete Product?</h2>
+            <p class="text-gray-600 mt-2">This action cannot be undone</p>
+        </div>
+
+        <!-- Content -->
+        <div class="px-6 py-6">
+            <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                <p class="text-sm text-gray-600 mb-2">You are about to permanently delete:</p>
+                <div class="flex items-center space-x-3">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-12 h-12 rounded object-cover">
+                    {% else %}
+                        <div class="w-12 h-12 rounded bg-gray-200 flex items-center justify-center">
+                            <i class="fas fa-image text-gray-400"></i>
+                        </div>
+                    {% endif %}
+                    <div>
+                        <p class="font-bold text-gray-900">{{ product.name }}</p>
+                        <p class="text-xs text-gray-600">₹{{ product.price }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                <p class="text-sm text-yellow-800">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <strong>Warning:</strong> Deleting this product will remove it permanently from your store. Customers will no longer be able to view or purchase it.
+                </p>
+            </div>
+
+            <!-- Confirmation Form -->
+            <form method="post" class="space-y-4">
+                {% csrf_token %}
+
+                <!-- Confirmation Checkbox (Optional but recommended) -->
+                <label class="flex items-start space-x-3 p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50">
+                    <input type="checkbox" id="confirm" name="confirm" class="w-4 h-4 mt-1" onchange="document.getElementById('delete-btn').disabled = !this.checked;">
+                    <span class="text-sm text-gray-700">
+                        Yes, I understand that this will <strong>permanently delete</strong> this product and this action cannot be undone.
+                    </span>
+                </label>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3 mt-6">
+                    <button type="submit" id="delete-btn" disabled 
+                            class="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-smooth font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2">
+                        <i class="fas fa-trash"></i>
+                        <span>Yes, Delete Permanently</span>
+                    </button>
+                    <a href="{% url 'store:farmer_product_list' %}" 
+                       class="flex-1 bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-smooth font-medium text-center flex items-center justify-center space-x-2">
+                        <i class="fas fa-times"></i>
+                        <span>Cancel</span>
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="bg-gray-50 px-6 py-3 border-t border-gray-200 text-center">
+            <p class="text-xs text-gray-600">
+                <a href="{% url 'store:farmer_product_list' %}" class="text-gray-500 hover:text-gray-700">← Back to Products</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

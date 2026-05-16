@@ -1,0 +1,235 @@
+{% extends 'store/farmer/farmer_base.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block page_title %}My Profile{% endblock %}
+{% block page_subtitle %}View your farm profile and personal information{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Profile Header Card -->
+    <div class="card-shadow bg-white rounded-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-green-500 to-green-600 h-32"></div>
+        
+        <div class="px-6 pb-6">
+            <div class="flex flex-col md:flex-row md:items-end md:space-x-6 -mt-20">
+                <!-- Profile Photo -->
+                <div class="mb-4 md:mb-0">
+                    {% if user.farmer_profile.profile_photo %}
+                        <img src="{{ user.farmer_profile.profile_photo.url }}" 
+                             alt="{{ user.farmer_profile.full_name }}"
+                             class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg">
+                    {% else %}
+                        <div class="w-32 h-32 rounded-full bg-green-200 flex items-center justify-center border-4 border-white shadow-lg">
+                            <i class="fas fa-user text-green-600 text-6xl"></i>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Name and Quick Info -->
+                <div class="flex-1">
+                    <h2 class="text-3xl font-bold text-gray-900">{{ user.farmer_profile.full_name }}</h2>
+                    <p class="text-gray-600 text-lg">@{{ user.username }}</p>
+                    <div class="mt-4 flex flex-wrap gap-4">
+                        <div>
+                            <p class="text-sm text-gray-500">Member Since</p>
+                            <p class="font-semibold text-gray-900">{{ user.farmer_profile.created_at|date:"M d, Y" }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Total Products</p>
+                            <p class="font-semibold text-gray-900">{{ products_count }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex space-x-3 mt-4 md:mt-0">
+                    <a href="{% url 'store:farmer_profile_edit' %}" 
+                       class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-smooth font-medium flex items-center space-x-2">
+                        <i class="fas fa-edit"></i>
+                        <span>Edit Profile</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Details Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Personal Information -->
+        <div class="card-shadow bg-white rounded-lg p-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center space-x-2">
+                <i class="fas fa-id-card text-green-600"></i>
+                <span>Personal Information</span>
+            </h3>
+            
+            <div class="space-y-4">
+                <div>
+                    <p class="text-xs text-gray-500 font-semibold uppercase">Full Name</p>
+                    <p class="text-gray-900 font-medium">{{ user.farmer_profile.full_name }}</p>
+                </div>
+
+                <div>
+                    <p class="text-xs text-gray-500 font-semibold uppercase">Gender</p>
+                    <p class="text-gray-900 font-medium capitalize">{{ user.farmer_profile.get_gender_display }}</p>
+                </div>
+
+                <div>
+                    <p class="text-xs text-gray-500 font-semibold uppercase">Date of Birth</p>
+                    <p class="text-gray-900 font-medium">{{ user.farmer_profile.date_of_birth|date:"M d, Y" }}</p>
+                </div>
+
+                <div>
+                    <p class="text-xs text-gray-500 font-semibold uppercase">Phone Number</p>
+                    <p class="text-gray-900 font-medium">{{ user.farmer_profile.phone_number }}</p>
+                </div>
+
+                <div>
+                    <p class="text-xs text-gray-500 font-semibold uppercase">Email</p>
+                    <p class="text-gray-900 font-medium">{{ user.farmer_profile.email }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Location Information -->
+        <div class="card-shadow bg-white rounded-lg p-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center space-x-2">
+                <i class="fas fa-map-marker-alt text-green-600"></i>
+                <span>Location Details</span>
+            </h3>
+            
+            <div class="space-y-4">
+                <div>
+                    <p class="text-xs text-gray-500 font-semibold uppercase">Village</p>
+                    <p class="text-gray-900 font-medium">{{ user.farmer_profile.village }}</p>
+                </div>
+
+                <div>
+                    <p class="text-xs text-gray-500 font-semibold uppercase">Address</p>
+                    <p class="text-gray-900 font-medium whitespace-pre-wrap">{{ user.farmer_profile.address }}</p>
+                </div>
+
+                <div class="pt-4 border-t border-gray-200">
+                    <p class="text-xs text-gray-500 font-semibold uppercase mb-2">Account Username</p>
+                    <p class="text-gray-900 font-medium">{{ user.username }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Account Status -->
+        <div class="card-shadow bg-white rounded-lg p-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center space-x-2">
+                <i class="fas fa-shield-alt text-blue-600"></i>
+                <span>Account Status</span>
+            </h3>
+            
+            <div class="space-y-3">
+                <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                    <span class="text-gray-700 font-medium">Account Status</span>
+                    <span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Active</span>
+                    </span>
+                </div>
+
+                <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                    <span class="text-gray-700 font-medium">Phone Verification</span>
+                    {% if user.farmer_profile.is_verified %}
+                        <span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Verified</span>
+                        </span>
+                    {% else %}
+                        <span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>Not Verified</span>
+                        </span>
+                    {% endif %}
+                </div>
+
+                <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+                    <span class="text-gray-700 font-medium">Profile Completeness</span>
+                    <span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">
+                        {% if user.farmer_profile.profile_photo %}
+                            <i class="fas fa-check-circle"></i>
+                            <span>100%</span>
+                        {% else %}
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>90%</span>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="card-shadow bg-white rounded-lg p-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center space-x-2">
+                <i class="fas fa-chart-bar text-purple-600"></i>
+                <span>Quick Statistics</span>
+            </h3>
+            
+            <div class="space-y-3">
+                <div class="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+                    <span class="text-gray-700 font-medium">Total Products</span>
+                    <span class="text-2xl font-bold text-purple-600">{{ products_count }}</span>
+                </div>
+
+                <div class="flex items-center justify-between p-3 bg-indigo-50 rounded-lg">
+                    <span class="text-gray-700 font-medium">Available Products</span>
+                    <span class="text-2xl font-bold text-indigo-600">{{ available_count }}</span>
+                </div>
+
+                <div class="flex items-center justify-between p-3 bg-pink-50 rounded-lg">
+                    <span class="text-gray-700 font-medium">Member Since</span>
+                    <span class="text-sm font-semibold text-pink-600">{{ user.farmer_profile.created_at|date:"Y" }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products Preview -->
+    <div class="card-shadow bg-white rounded-lg overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-lg font-bold text-gray-900">Your Latest Products</h3>
+            <a href="{% url 'store:farmer_product_list' %}" class="text-green-600 font-medium hover:text-green-700 text-sm">
+                View all →
+            </a>
+        </div>
+
+        {% if latest_products %}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
+            {% for product in latest_products %}
+                    <div class="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-smooth">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-40 object-cover">
+                        {% else %}
+                            <div class="w-full h-40 bg-gray-200 flex items-center justify-center">
+                                <i class="fas fa-image text-gray-400 text-3xl"></i>
+                            </div>
+                        {% endif %}
+                        <div class="p-4">
+                            <h4 class="font-semibold text-gray-900 mb-1">{{ product.name }}</h4>
+                            <p class="text-sm text-gray-600 mb-2">{{ product.category }}</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-lg font-bold text-green-600">₹{{ product.price }}</span>
+                                <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">{{ product.quantity }} qty</span>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="px-6 py-12 text-center">
+                <p class="text-gray-600 font-medium">No products yet</p>
+                <a href="{% url 'store:farmer_product_create' %}" class="text-green-600 font-medium hover:text-green-700">
+                    Add your first product →
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

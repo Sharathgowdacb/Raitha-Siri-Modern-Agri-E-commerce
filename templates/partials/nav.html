@@ -1,0 +1,236 @@
+{% load static %}
+<header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-200">
+  <div class="container mx-auto px-4 py-4">
+    <div class="flex items-center justify-between gap-4">
+      <!-- Left: Logo -->
+      <a href="/" class="flex items-center gap-3">
+        <img src="{% static 'images/logo.png' %}" alt="logo" class="h-10 w-10 rounded-xl bg-green-200" />
+        <div>
+          <span class="text-xl font-semibold text-gray-900">Farm Market</span>
+          <p class="text-xs text-gray-500">Fresh & local</p>
+        </div>
+      </a>
+
+      <!-- Center: Search -->
+      <div class="hidden lg:flex flex-1 max-w-xl">
+        <div class="relative w-full">
+          <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </span>
+          <input
+            type="search"
+            placeholder="Search for fresh produce..."
+            class="w-full rounded-full border border-gray-200 bg-gray-50 pl-11 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/40 focus:border-green-500/50"
+          />
+        </div>
+      </div>
+
+      <!-- Right: Icon Menu -->
+      <div class="hidden md:flex items-center gap-4">
+        {% if user.is_authenticated %}
+          <!-- Account Dropdown -->
+          <div class="relative">
+            <button id="account-toggle" class="flex items-center gap-2 rounded-full px-3 py-2 hover:bg-gray-100 transition">
+              <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-green-100 text-green-700">
+                <i class="fa-regular fa-user"></i>
+              </span>
+              <span class="text-sm font-medium text-gray-700">{{ user.username }}</span>
+              <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
+            </button>
+            <div id="account-menu" class="absolute right-0 mt-2 w-48 rounded-xl border border-gray-200 bg-white shadow-lg py-2 hidden">
+              <a href="{% url 'store:buyer_dashboard' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Profile</a>
+              <a href="{% url 'store:buyer_settings' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Settings</a>
+              <a href="{% url 'store:help_center' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Help Center</a>
+              <form method="post" action="{% url 'store:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">Logout</button>
+              </form>
+            </div>
+          </div>
+        {% else %}
+          <a href="{% url 'store:login' %}" class="text-sm font-medium text-gray-700 hover:text-gray-900">Login</a>
+          <a href="{% url 'store:register' %}" class="text-sm font-semibold text-green-700 hover:text-green-800">Create account</a>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+          <div class="relative">
+            <button
+              id="notification-toggle"
+              class="relative rounded-full p-3 hover:bg-gray-100 transition"
+              title="Notifications"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <i class="fa-regular fa-bell text-gray-600 {% if buyer_unread_notifications_count %}animate-pulse{% endif %}"></i>
+              {% if buyer_unread_notifications_count %}
+                <span class="absolute -top-1 -right-1 h-5 min-w-[1.25rem] rounded-full bg-red-600 text-white text-[0.65rem] flex items-center justify-center px-1">
+                  {{ buyer_unread_notifications_count }}
+                </span>
+              {% endif %}
+            </button>
+            <div id="notification-menu" class="absolute right-0 mt-2 w-80 rounded-xl border border-gray-200 bg-white shadow-lg py-2 hidden">
+              <div class="px-4 py-2 border-b border-gray-100">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-semibold text-gray-900">Notifications</span>
+                  {% if buyer_unread_notifications_count %}
+                    <span class="text-xs text-gray-500">{{ buyer_unread_notifications_count }} unread</span>
+                  {% endif %}
+                </div>
+              </div>
+
+              {% if buyer_notifications %}
+                <div class="max-h-80 overflow-y-auto">
+                  {% for notification in buyer_notifications %}
+                    <a
+                      href="{{ notification.target_url|default:'#' }}"
+                      class="notification-item block px-4 py-3 hover:bg-gray-50 transition border-b border-gray-100 last:border-b-0"
+                      data-notification-id="{{ notification.pk }}"
+                      data-unread="{% if not notification.is_read %}true{% else %}false{% endif %}"
+                      data-mark-read-url="{% url 'store:buyer_notification_mark_read' notification.pk %}"
+                    >
+                      <div class="flex items-start gap-3">
+                        <span class="mt-1 inline-flex h-2 w-2 rounded-full {% if notification.is_read %}bg-gray-300{% else %}bg-green-600{% endif %}"></span>
+                        <div class="min-w-0">
+                          <div class="text-sm font-medium text-gray-900 truncate">{{ notification.title }}</div>
+                          <div class="text-xs text-gray-500">{{ notification.message }}</div>
+                          <div class="text-[0.7rem] text-gray-400 mt-1">{{ notification.created_at|date:"M d, Y · g:i A" }}</div>
+                        </div>
+                      </div>
+                    </a>
+                  {% endfor %}
+                </div>
+                <div class="flex items-center justify-between px-4 py-3 border-t border-gray-100">
+                  <a href="{% url 'store:buyer_notifications' %}" class="text-xs font-medium text-green-700 hover:text-green-800">View all</a>
+                  <form method="post" action="{% url 'store:buyer_notifications_mark_all_read' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="text-xs font-medium text-gray-600 hover:text-gray-800">Mark all read</button>
+                  </form>
+                </div>
+              {% else %}
+                <div class="px-4 py-6 text-sm text-gray-500 text-center">
+                  No notifications yet.
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+
+        <a href="{% url 'store:wishlist' %}" class="relative rounded-full p-3 hover:bg-gray-100 transition" title="Wishlist">
+          <i class="fa-regular fa-heart text-gray-600"></i>
+        </a>
+        <a href="{% url 'store:order_history' %}" class="relative rounded-full p-3 hover:bg-gray-100 transition" title="Orders">
+          <i class="fa-solid fa-box text-gray-600"></i>
+        </a>
+        <a href="{% url 'store:view_cart' %}" class="relative rounded-full p-3 hover:bg-gray-100 transition" title="Cart">
+          <i class="fa-solid fa-cart-shopping text-gray-700"></i>
+          <span class="absolute -top-1 -right-1 h-5 min-w-[1.25rem] rounded-full bg-green-600 text-white text-[0.65rem] flex items-center justify-center px-1">
+            <span id="cart-count">{{ cart_count }}</span>
+          </span>
+        </a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button id="mobile-menu-toggle" class="md:hidden rounded-lg border border-gray-200 px-3 py-2 text-gray-700 hover:bg-gray-100">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Search + Menu -->
+    <div id="mobile-menu" class="md:hidden mt-4 hidden">
+      <div class="relative mb-4">
+        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+        <input
+          type="search"
+          placeholder="Search for fresh produce..."
+          class="w-full rounded-full border border-gray-200 bg-gray-50 pl-11 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/40 focus:border-green-500/50"
+        />
+      </div>
+      <div class="flex flex-col gap-2">
+        <a href="{% url 'store:buyer_dashboard' %}" class="rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+        <a href="{% url 'store:buyer_settings' %}" class="rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+        <a href="{% url 'store:help_center' %}" class="rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Help Center</a>
+        <a href="{% url 'store:wishlist' %}" class="rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Wishlist</a>
+        <a href="{% url 'store:view_cart' %}" class="rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Cart</a>
+        <a href="{% url 'store:order_history' %}" class="rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Orders</a>
+        <a href="{% url 'store:buyer_notifications' %}" class="rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Notifications</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  const accountToggle = document.getElementById('account-toggle');
+  const accountMenu = document.getElementById('account-menu');
+  const notificationToggle = document.getElementById('notification-toggle');
+  const notificationMenu = document.getElementById('notification-menu');
+  const mobileToggle = document.getElementById('mobile-menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  function getCookie(name) {
+    const cookieValue = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith(name + '='));
+    return cookieValue ? decodeURIComponent(cookieValue.split('=')[1]) : null;
+  }
+
+  if (accountToggle && accountMenu) {
+    accountToggle.addEventListener('click', () => {
+      accountMenu.classList.toggle('hidden');
+    });
+    document.addEventListener('click', (event) => {
+      if (!accountToggle.contains(event.target) && !accountMenu.contains(event.target)) {
+        accountMenu.classList.add('hidden');
+      }
+    });
+  }
+
+  if (notificationToggle && notificationMenu) {
+    notificationToggle.addEventListener('click', () => {
+      const isOpen = !notificationMenu.classList.contains('hidden');
+      notificationMenu.classList.toggle('hidden');
+      notificationToggle.setAttribute('aria-expanded', String(!isOpen));
+    });
+    document.addEventListener('click', (event) => {
+      if (!notificationToggle.contains(event.target) && !notificationMenu.contains(event.target)) {
+        notificationMenu.classList.add('hidden');
+        notificationToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    const notificationItems = document.querySelectorAll('.notification-item');
+    notificationItems.forEach((item) => {
+      item.addEventListener('click', async (event) => {
+        const unread = item.dataset.unread === 'true';
+        const markReadUrl = item.dataset.markReadUrl;
+        if (!unread || !markReadUrl) {
+          return;
+        }
+        event.preventDefault();
+        try {
+          await fetch(markReadUrl, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+              'X-CSRFToken': getCookie('csrftoken') || '',
+              'X-Requested-With': 'XMLHttpRequest',
+            },
+          });
+        } catch (error) {
+          // Ignore and continue navigation.
+        }
+        const href = item.getAttribute('href');
+        if (href && href !== '#') {
+          window.location.href = href;
+        }
+      });
+    });
+  }
+
+  if (mobileToggle && mobileMenu) {
+    mobileToggle.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+  }
+</script>

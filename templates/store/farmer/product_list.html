@@ -1,0 +1,195 @@
+{% extends 'store/farmer/farmer_base.html' %}
+
+{% block title %}My Products{% endblock %}
+
+{% block page_title %}My Products{% endblock %}
+{% block page_subtitle %}Manage all your farm products{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Action Bar -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+            <p class="text-gray-600">You have <span class="font-bold text-green-600">{{ products|length }}</span> product{{ products|length|pluralize }}</p>
+        </div>
+        <a href="{% url 'store:farmer_product_create' %}" 
+           class="inline-block bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-smooth font-medium flex items-center justify-center space-x-2">
+            <i class="fas fa-plus"></i>
+            <span>Add New Product</span>
+        </a>
+    </div>
+
+    <!-- Products Display -->
+    {% if products %}
+        <!-- Grid View -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for product in products %}
+                <div class="card-shadow bg-white rounded-lg overflow-hidden hover:shadow-xl transition-smooth group">
+                    <!-- Product Image -->
+                    <div class="relative overflow-hidden bg-gray-200 h-48">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        {% else %}
+                            <div class="w-full h-full flex items-center justify-center bg-gray-300">
+                                <i class="fas fa-image text-gray-400 text-4xl"></i>
+                            </div>
+                        {% endif %}
+
+                        <!-- Availability Badge -->
+                        <div class="absolute top-3 right-3">
+                            {% if product.is_available %}
+                                <span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold bg-green-500 text-white">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Available</span>
+                                </span>
+                            {% else %}
+                                <span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold bg-red-500 text-white">
+                                    <i class="fas fa-times-circle"></i>
+                                    <span>Unavailable</span>
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Product Details -->
+                    <div class="p-4">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex-1">
+                                <h3 class="font-bold text-gray-900 text-lg truncate">{{ product.name }}</h3>
+                                <p class="text-sm text-gray-600">{{ product.category }}
+                                    {% if product.subcategory %}
+                                        - {{ product.subcategory }}
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        {% if product.description %}
+                            <p class="text-sm text-gray-600 mb-3">{{ product.description }}</p>
+                        {% endif %}
+
+                        <!-- Price and Quantity -->
+                        <div class="flex items-center justify-between mb-4 p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="text-xs text-gray-600">Price</p>
+                                <p class="text-lg font-bold text-green-600">₹{{ product.price }}</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-600">Stock</p>
+                                <p class="text-lg font-bold text-blue-600">{{ product.quantity }} units</p>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-2">
+                            <a href="{% url 'store:farmer_product_edit' product.id %}" 
+                               class="flex-1 bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition-smooth font-medium text-sm flex items-center justify-center space-x-1">
+                                <i class="fas fa-edit"></i>
+                                <span>Edit</span>
+                            </a>
+                            <a href="{% url 'store:farmer_product_delete' product.id %}" 
+                               class="flex-1 bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition-smooth font-medium text-sm flex items-center justify-center space-x-1">
+                                <i class="fas fa-trash"></i>
+                                <span>Delete</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <!-- Empty State -->
+        <div class="card-shadow bg-white rounded-lg p-12 text-center">
+            <div class="mb-6">
+                <i class="fas fa-inbox text-gray-300 text-7xl mb-4 block"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">No Products Yet</h3>
+            <p class="text-gray-600 mb-6">You haven't added any products to your farm store yet. Start by adding your first product!</p>
+            <a href="{% url 'store:farmer_product_create' %}" 
+               class="inline-block bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-smooth font-medium flex items-center justify-center space-x-2">
+                <i class="fas fa-plus-circle"></i>
+                <span>Add Your First Product</span>
+            </a>
+        </div>
+    {% endif %}
+
+    <!-- Table View (Alternative) -->
+    {% if products %}
+        <div class="card-shadow bg-white rounded-lg overflow-hidden mt-8">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-bold text-gray-900">Detailed List View</h3>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-200">
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Product</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Category</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Price</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Stock</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
+                            <th class="px-6 py-3 text-center text-sm font-semibold text-gray-700">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                            <tr class="border-b border-gray-200 hover:bg-gray-50 transition-smooth">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-3">
+                                        {% if product.image %}
+                                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-10 h-10 rounded object-cover">
+                                        {% else %}
+                                            <div class="w-10 h-10 rounded bg-gray-200 flex items-center justify-center">
+                                                <i class="fas fa-image text-gray-400"></i>
+                                            </div>
+                                        {% endif %}
+                                        <span class="font-medium text-gray-900">{{ product.name }}</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-700">
+                                    {{ product.category }}
+                                    {% if product.subcategory %}
+                                        <span class="text-gray-500">- {{ product.subcategory }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 text-sm font-semibold text-gray-900">₹{{ product.price }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-700">{{ product.quantity }} units</td>
+                                <td class="px-6 py-4">
+                                    {% if product.is_available %}
+                                        <span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>Available</span>
+                                        </span>
+                                    {% else %}
+                                        <span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                                            <i class="fas fa-times-circle"></i>
+                                            <span>Unavailable</span>
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <div class="flex justify-center space-x-2">
+                                        <a href="{% url 'store:farmer_product_edit' product.id %}" 
+                                           class="p-2 text-blue-600 hover:bg-blue-50 rounded transition-smooth" 
+                                           title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'store:farmer_product_delete' product.id %}" 
+                                           class="p-2 text-red-600 hover:bg-red-50 rounded transition-smooth" 
+                                           title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

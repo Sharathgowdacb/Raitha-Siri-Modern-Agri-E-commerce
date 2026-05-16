@@ -1,0 +1,8 @@
+Django>=4.2
+Pillow>=9.0
+django-allauth>=0.60
+requests>=2.32
+PyJWT>=2.8
+cryptography>=42
+mysqlclient>=2.2
+coverage>=7.0

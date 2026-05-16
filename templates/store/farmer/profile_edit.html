@@ -1,0 +1,201 @@
+{% extends 'store/farmer/farmer_base.html' %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block page_title %}Edit Your Profile{% endblock %}
+{% block page_subtitle %}Update your farm information and contact details{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="card-shadow bg-white rounded-lg overflow-hidden">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-green-600 to-green-700 px-6 py-8 text-white">
+            <h2 class="text-2xl font-bold flex items-center space-x-2">
+                <i class="fas fa-user-edit"></i>
+                <span>Update Your Profile</span>
+            </h2>
+            <p class="mt-2 text-green-100">Make changes to your farm profile and personal information</p>
+        </div>
+
+        <!-- Form -->
+        <form method="post" enctype="multipart/form-data" class="p-8">
+            {% csrf_token %}
+
+            <!-- Display Form Errors -->
+            {% if form.non_field_errors %}
+                <div class="mb-6 p-4 rounded-lg bg-red-100 text-red-700 border border-red-300">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Form Sections -->
+            <div class="space-y-8">
+                <!-- Profile Photo Section -->
+                <div class="border-b border-gray-200 pb-8">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center space-x-2">
+                        <i class="fas fa-camera text-green-600"></i>
+                        <span>Profile Photo</span>
+                    </h3>
+
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <!-- Current Photo Preview -->
+                        <div>
+                            <p class="text-sm text-gray-600 font-medium mb-2">Current Photo</p>
+                            {% if user.farmer_profile.profile_photo %}
+                                <img src="{{ user.farmer_profile.profile_photo.url }}" 
+                                     alt="{{ user.farmer_profile.full_name }}"
+                                     class="w-32 h-32 rounded-lg object-cover shadow-md">
+                            {% else %}
+                                <div class="w-32 h-32 rounded-lg bg-gray-200 flex items-center justify-center">
+                                    <i class="fas fa-user text-gray-400 text-4xl"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Upload Field -->
+                        <div class="flex-1">
+                            <label for="id_profile_photo" class="block text-sm font-medium text-gray-700 mb-2">
+                                Upload New Photo
+                            </label>
+                            <div class="relative">
+                                {{ form.profile_photo }}
+                                <p class="text-xs text-gray-500 mt-2">JPG, PNG or GIF • Maximum 5MB</p>
+                            </div>
+                            {% if form.profile_photo.errors %}
+                                <p class="text-red-600 text-sm mt-2">{{ form.profile_photo.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Personal Information Section -->
+                <div class="border-b border-gray-200 pb-8">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center space-x-2">
+                        <i class="fas fa-id-card text-green-600"></i>
+                        <span>Personal Information</span>
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Full Name -->
+                        <div>
+                            <label for="id_full_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                Full Name <span class="text-red-600">*</span>
+                            </label>
+                            {{ form.full_name }}
+                            {% if form.full_name.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.full_name.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Gender -->
+                        <div>
+                            <label for="id_gender" class="block text-sm font-medium text-gray-700 mb-2">
+                                Gender <span class="text-red-600">*</span>
+                            </label>
+                            {{ form.gender }}
+                            {% if form.gender.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.gender.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Date of Birth -->
+                        <div>
+                            <label for="id_date_of_birth" class="block text-sm font-medium text-gray-700 mb-2">
+                                Date of Birth <span class="text-red-600">*</span>
+                            </label>
+                            {{ form.date_of_birth }}
+                            {% if form.date_of_birth.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.date_of_birth.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div>
+                            <label for="id_phone_number" class="block text-sm font-medium text-gray-700 mb-2">
+                                Phone Number <span class="text-red-600">*</span>
+                            </label>
+                            {{ form.phone_number }}
+                            {% if form.phone_number.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.phone_number.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label for="id_email" class="block text-sm font-medium text-gray-700 mb-2">
+                                Email <span class="text-red-600">*</span>
+                            </label>
+                            {{ form.email }}
+                            {% if form.email.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.email.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location Information Section -->
+                <div class="pb-8">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center space-x-2">
+                        <i class="fas fa-map-marker-alt text-green-600"></i>
+                        <span>Location Details</span>
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Village -->
+                        <div>
+                            <label for="id_village" class="block text-sm font-medium text-gray-700 mb-2">
+                                Village <span class="text-red-600">*</span>
+                            </label>
+                            {{ form.village }}
+                            {% if form.village.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.village.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Address (Full Width) -->
+                    <div class="mt-6">
+                        <label for="id_address" class="block text-sm font-medium text-gray-700 mb-2">
+                            Address <span class="text-red-600">*</span>
+                        </label>
+                        {{ form.address }}
+                        {% if form.address.errors %}
+                            <p class="text-red-600 text-sm mt-1">{{ form.address.errors.0 }}</p>
+                        {% endif %}
+                        <p class="text-xs text-gray-500 mt-2">Include street, area, and any landmarks</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex gap-4 pt-8 border-t border-gray-200">
+                <button type="submit" class="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-smooth font-medium flex items-center justify-center space-x-2">
+                    <i class="fas fa-save"></i>
+                    <span>Save Changes</span>
+                </button>
+                <a href="{% url 'store:farmer_profile_view' %}" class="flex-1 bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 transition-smooth font-medium text-center flex items-center justify-center space-x-2">
+                    <i class="fas fa-times"></i>
+                    <span>Cancel</span>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    #id_profile_photo {
+        display: block;
+        width: 100%;
+        padding: 0.5rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.375rem;
+        cursor: pointer;
+    }
+
+    #id_profile_photo:hover {
+        border-color: #10b981;
+    }
+</style>
+{% endblock %}

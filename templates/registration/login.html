@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FarmFresh Login</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Font Awesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWix+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkR4j8yT9Tj0UjzB6+QcmGeXjr6UIz+YdX2Q=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <style>
+      body {
+        font-family: 'Poppins', sans-serif;
+      }
+
+      /* Subtle entry animation for the right pane card */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(22px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate-fade-up {
+        animation: fadeUp 700ms ease-out both;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-slate-950">
+    <!-- Main Split Layout -->
+    <main class="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+      <!-- Left Side: Agriculture Hero Image + Overlay Text -->
+      <section
+        class="relative hidden lg:flex items-end p-12 bg-cover bg-center"
+        style="background-image: url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1800&q=80');"
+      >
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-emerald-900/25"></div>
+
+        <div class="relative z-10 max-w-xl text-white">
+          <span class="inline-flex items-center gap-2 text-xs tracking-[0.2em] uppercase bg-white/15 border border-white/20 rounded-full px-4 py-2 mb-5">
+            <i class="fa-solid fa-seedling"></i>
+            FarmFresh Network
+          </span>
+          <h1 class="text-4xl xl:text-5xl font-bold leading-tight">
+            Fresh From Farm to Your Doorstep
+          </h1>
+          <p class="mt-4 text-white/85 text-base xl:text-lg">
+            Empowering local farmers and buyers through a seamless digital marketplace.
+          </p>
+        </div>
+      </section>
+
+      <!-- Right Side: Glassmorphism Login Card -->
+      <section class="relative flex items-center justify-center p-5 sm:p-8 bg-[radial-gradient(circle_at_20%_20%,#34d399_0%,#0f172a_45%,#020617_100%)]">
+        <div class="absolute inset-0 pointer-events-none">
+          <div class="absolute -top-12 -left-8 h-36 w-36 rounded-full bg-emerald-400/20 blur-2xl"></div>
+          <div class="absolute bottom-8 right-4 h-44 w-44 rounded-full bg-cyan-400/15 blur-2xl"></div>
+        </div>
+
+        <div class="animate-fade-up relative z-10 w-full max-w-md rounded-3xl border border-white/25 bg-white/10 backdrop-blur-xl shadow-2xl p-6 sm:p-8 text-white">
+          <!-- Header -->
+          <div class="mb-6">
+            <p class="text-sm text-emerald-200">Login</p>
+            <h2 class="text-2xl font-semibold mt-1">Sign in to continue</h2>
+            <p class="text-sm text-white/70 mt-2">Access fresh produce and track your orders.</p>
+          </div>
+
+          {% if messages %}
+            <div class="space-y-2 mb-4">
+              {% for message in messages %}
+                <div class="rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-sm text-white/90">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <!-- Role Toggle -->
+          <div class="mb-4">
+            <p class="text-sm text-white/90 mb-2">Login as</p>
+            <div class="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                id="roleBuyer"
+                class="role-btn rounded-xl border border-white/35 bg-white/10 py-2.5 text-sm hover:bg-white/20 transition"
+                data-role="Buyer"
+              >
+                <i class="fa-solid fa-basket-shopping mr-2"></i>Buyer
+              </button>
+              <button
+                type="button"
+                id="roleFarmer"
+                class="role-btn rounded-xl border border-white/35 bg-white/10 py-2.5 text-sm hover:bg-white/20 transition"
+                data-role="Farmer"
+              >
+                <i class="fa-solid fa-tractor mr-2"></i>Farmer
+              </button>
+            </div>
+            <p class="mt-2 text-xs text-white/60">Choose the role you want to sign in as.</p>
+          </div>
+
+          <!-- Login Form -->
+          <form action="{% url 'store:login' %}" method="post" class="space-y-4">
+            {% csrf_token %}
+            {% if errors.general %}
+              <div class="rounded-xl border border-rose-300/40 bg-rose-500/20 text-rose-100 px-3 py-2 text-sm">
+                {{ errors.general }}
+              </div>
+            {% endif %}
+            <!-- Email Field -->
+            <div>
+              <label for="email" class="block text-sm mb-1 text-white/90">Email</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-white/60">
+                  <i class="fa-regular fa-envelope"></i>
+                </span>
+                <input
+                  id="email"
+                  type="email"
+                  name="email"
+                  value="{{ email_value }}"
+                  placeholder="you@example.com"
+                  class="w-full rounded-xl bg-white/10 border border-white/30 pl-10 pr-4 py-3 text-sm placeholder:text-white/45 focus:outline-none focus:ring-2 focus:ring-emerald-300/70 focus:border-emerald-200/70 transition"
+                />
+              </div>
+              <p class="mt-1 text-xs text-rose-200/85">{{ errors.email|default:' ' }}</p>
+            </div>
+
+            <!-- Password Field + Toggle -->
+            <div>
+              <label for="password" class="block text-sm mb-1 text-white/90">Password</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-white/60">
+                  <i class="fa-solid fa-lock"></i>
+                </span>
+                <input
+                  id="password"
+                  type="password"
+                  name="password"
+                  placeholder="Enter your password"
+                  class="w-full rounded-xl bg-white/10 border border-white/30 pl-10 pr-11 py-3 text-sm placeholder:text-white/45 focus:outline-none focus:ring-2 focus:ring-emerald-300/70 focus:border-emerald-200/70 transition"
+                />
+                <button id="togglePassword" type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-white/75 hover:text-white transition" aria-label="Toggle password visibility">
+                  <i id="passwordIcon" class="fa-regular fa-eye"></i>
+                </button>
+              </div>
+              <p class="mt-1 text-xs text-rose-200/85">{{ errors.password|default:' ' }}</p>
+            </div>
+
+            <input type="hidden" id="roleInput" name="role" value="{{ selected_role|default:'Buyer' }}" />
+
+            <!-- Remember + Forgot -->
+            <div class="flex items-center justify-between text-sm">
+              <label class="inline-flex items-center gap-2 text-white/85 cursor-pointer">
+                <input name="remember" value="1" type="checkbox" class="rounded border-white/40 bg-white/10 text-emerald-500 focus:ring-emerald-400" />
+                Remember me
+              </label>
+              <a href="{% url 'store:password_reset' %}" class="text-emerald-200 hover:text-emerald-100 transition">Forgot password?</a>
+            </div>
+
+            <!-- Login Button -->
+            <button
+              type="submit"
+              class="w-full mt-2 rounded-xl py-3 text-sm font-semibold bg-gradient-to-r from-emerald-400 via-green-500 to-lime-500 text-slate-900 shadow-lg shadow-emerald-900/35 hover:scale-[1.01] hover:shadow-emerald-300/35 active:scale-[0.99] transition-all duration-300"
+            >
+              Login
+            </button>
+
+            <!-- Sign Up Link -->
+            <p class="text-center text-sm text-white/80 pt-1">
+              Don't have an account?
+              <a href="{% url 'store:register' %}" class="text-emerald-200 font-medium hover:text-emerald-100 transition">Sign up</a>
+            </p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // Password visibility toggle
+      const passwordInput = document.getElementById('password');
+      const togglePasswordBtn = document.getElementById('togglePassword');
+      const passwordIcon = document.getElementById('passwordIcon');
+
+      togglePasswordBtn.addEventListener('click', () => {
+        const isPassword = passwordInput.type === 'password';
+        passwordInput.type = isPassword ? 'text' : 'password';
+        passwordIcon.className = isPassword ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
+      });
+
+      // Role toggle
+      const roleInput = document.getElementById('roleInput');
+      const roleButtons = document.querySelectorAll('.role-btn');
+      function syncRoleButtons() {
+        const current = roleInput.value || 'Buyer';
+        roleButtons.forEach((btn) => {
+          const isActive = btn.dataset.role === current;
+          btn.classList.toggle('bg-emerald-400/20', isActive);
+          btn.classList.toggle('border-emerald-300/80', isActive);
+          btn.classList.toggle('ring-2', isActive);
+          btn.classList.toggle('ring-emerald-300/40', isActive);
+          btn.classList.toggle('text-white', isActive);
+        });
+      }
+      roleButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          roleInput.value = btn.dataset.role;
+          syncRoleButtons();
+        });
+      });
+      syncRoleButtons();
+    </script>
+  </body>
+</html>
