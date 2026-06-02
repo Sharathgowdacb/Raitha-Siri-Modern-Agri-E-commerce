@@ -198,6 +198,22 @@ button.sidebar-link:hover .icon-tile {
   transform: scale(1.05);
 }
 
+/* Subtle floating animation for the trolley image in the buyer right sidebar */
+.trolley-float {
+  animation: trolley-float 4s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes trolley-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
 /* ===== Dark Mode Styles ===== */
 
 .dark {
@@ -541,6 +557,54 @@ button.sidebar-link:hover .icon-tile {
   }
   50% {
     transform: translateY(-8px);
+  }
+}
+
+/* ===== Premium Hero Animations ===== */
+
+.hero-float {
+  animation: hero-float 6.5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes hero-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(-0.8deg);
+  }
+}
+
+.leaf-drift {
+  animation-name: leaf-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  transform-origin: center;
+}
+
+.leaf-drift--1 { animation-duration: 5.2s; animation-delay: -0.8s; }
+.leaf-drift--2 { animation-duration: 6.1s; animation-delay: -1.6s; }
+.leaf-drift--3 { animation-duration: 5.6s; animation-delay: -2.2s; }
+.leaf-drift--4 { animation-duration: 6.8s; animation-delay: -1.1s; }
+.leaf-drift--5 { animation-duration: 7.2s; animation-delay: -2.7s; }
+
+@keyframes leaf-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(8px, -10px, 0) rotate(10deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-float,
+  .leaf-drift,
+  .float-leaf {
+    animation: none !important;
   }
 }
 

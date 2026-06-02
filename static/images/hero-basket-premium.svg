@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="980" height="760" viewBox="0 0 980 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="140" y1="40" x2="860" y2="720" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ECFDF5"/>
+      <stop offset="1" stop-color="#D1FAE5"/>
+    </linearGradient>
+    <linearGradient id="shadow" x1="240" y1="640" x2="740" y2="720" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0F172A" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#0F172A" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="basket" x1="260" y1="420" x2="720" y2="680" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FBBF24"/>
+      <stop offset="1" stop-color="#D97706"/>
+    </linearGradient>
+    <linearGradient id="basketRim" x1="280" y1="430" x2="700" y2="530" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FDE68A"/>
+      <stop offset="1" stop-color="#F59E0B"/>
+    </linearGradient>
+    <filter id="softShadow" x="0" y="0" width="980" height="760" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#0F172A" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <!-- Soft background plate -->
+  <g filter="url(#softShadow)">
+    <path d="M210 165C210 122.474 244.474 88 287 88H693C735.526 88 770 122.474 770 165V560C770 602.526 735.526 637 693 637H287C244.474 637 210 602.526 210 560V165Z" fill="url(#bg)"/>
+  </g>
+
+  <!-- Ground shadow -->
+  <ellipse cx="490" cy="655" rx="270" ry="40" fill="url(#shadow)"/>
+
+  <!-- Produce (back layer) -->
+  <!-- leafy greens -->
+  <path d="M330 265C300 235 300 190 335 175C364 163 392 180 405 210C420 200 445 202 465 226C490 255 485 300 450 320C415 340 360 320 330 265Z" fill="#34D399"/>
+  <path d="M630 265C660 235 660 190 625 175C596 163 568 180 555 210C540 200 515 202 495 226C470 255 475 300 510 320C545 340 600 320 630 265Z" fill="#22C55E"/>
+
+  <!-- tomatoes -->
+  <circle cx="560" cy="310" r="44" fill="#EF4444"/>
+  <path d="M552 270C560 280 572 285 586 284" stroke="#16A34A" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="460" cy="315" r="38" fill="#F43F5E"/>
+  <path d="M452 286C462 296 472 300 486 300" stroke="#15803D" stroke-width="10" stroke-linecap="round"/>
+
+  <!-- orange -->
+  <circle cx="370" cy="325" r="42" fill="#FB923C"/>
+  <path d="M370 284C378 294 388 298 401 297" stroke="#15803D" stroke-width="11" stroke-linecap="round"/>
+
+  <!-- purple onion -->
+  <path d="M650 360C650 405 613 442 568 442C523 442 486 405 486 360C486 330 504 304 530 292C542 286 556 280 568 268C580 280 594 286 606 292C632 304 650 330 650 360Z" fill="#A855F7"/>
+  <path d="M568 268C565 292 552 308 540 320" stroke="#F5F3FF" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Basket rim -->
+  <path d="M280 432C280 398.862 306.862 372 340 372H640C673.138 372 700 398.862 700 432V455C700 488.138 673.138 515 640 515H340C306.862 515 280 488.138 280 455V432Z" fill="url(#basketRim)"/>
+
+  <!-- Basket body -->
+  <path d="M250 470C255 440 282 418 312 418H668C698 418 725 440 730 470L760 640C765 670 742 698 711 698H269C238 698 215 670 220 640L250 470Z" fill="url(#basket)"/>
+
+  <!-- Basket weave lines -->
+  <g opacity="0.35" stroke="#92400E" stroke-width="10" stroke-linecap="round">
+    <path d="M285 520H695"/>
+    <path d="M270 570H710"/>
+    <path d="M260 620H720"/>
+  </g>
+  <g opacity="0.25" stroke="#92400E" stroke-width="10" stroke-linecap="round">
+    <path d="M330 465C320 520 320 600 330 690"/>
+    <path d="M410 465C400 520 400 600 410 690"/>
+    <path d="M490 465C480 520 480 600 490 690"/>
+    <path d="M570 465C560 520 560 600 570 690"/>
+    <path d="M650 465C640 520 640 600 650 690"/>
+  </g>
+
+  <!-- Basket handle -->
+  <path d="M330 420C340 330 395 260 490 260C585 260 640 330 650 420" stroke="#B45309" stroke-width="22" stroke-linecap="round"/>
+  <path d="M352 418C362 344 410 292 490 292C570 292 618 344 628 418" stroke="#FCD34D" stroke-width="14" stroke-linecap="round" opacity="0.75"/>
+
+  <!-- Extra produce (front pops) -->
+  <!-- cucumber -->
+  <path d="M360 468C360 446 378 428 400 428H448C470 428 488 446 488 468V478C488 500 470 518 448 518H400C378 518 360 500 360 478V468Z" fill="#16A34A"/>
+  <circle cx="392" cy="473" r="6" fill="#DCFCE7" opacity="0.65"/>
+  <circle cx="418" cy="489" r="6" fill="#DCFCE7" opacity="0.65"/>
+  <circle cx="444" cy="473" r="6" fill="#DCFCE7" opacity="0.65"/>
+
+  <!-- lemon -->
+  <path d="M560 485C560 457 583 434 611 434H626C654 434 677 457 677 485V496C677 524 654 547 626 547H611C583 547 560 524 560 496V485Z" fill="#FDE047"/>
+  <path d="M590 468C604 474 631 474 648 468" stroke="#F59E0B" stroke-width="10" stroke-linecap="round" opacity="0.55"/>
+
+  <!-- strawberry -->
+  <path d="M520 388C520 357 545 332 576 332C607 332 632 357 632 388C632 420 600 462 576 477C552 462 520 420 520 388Z" fill="#E11D48"/>
+  <path d="M552 330C564 340 588 340 600 330" stroke="#16A34A" stroke-width="10" stroke-linecap="round"/>
+  <g fill="#FEF3C7" opacity="0.85">
+    <circle cx="556" cy="383" r="3"/>
+    <circle cx="590" cy="388" r="3"/>
+    <circle cx="575" cy="410" r="3"/>
+  </g>
+</svg>
