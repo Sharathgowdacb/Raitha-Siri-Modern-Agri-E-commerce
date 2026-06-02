@@ -1,0 +1,20 @@
+{
+  "name": "farmer-ecommerce",
+  "version": "1.0.0",
+  "description": "Production-style Django web app where farmers list products and customers browse, add to cart, and place orders.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sharathgowdacb/MODERaGRIeCOM.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sharathgowdacb/MODERaGRIeCOM/issues"
+  },
+  "homepage": "https://github.com/Sharathgowdacb/MODERaGRIeCOM#readme"
+}
