@@ -18,6 +18,7 @@ ALLOWED_HOSTS = [
     'raitha-siri-modern-agri-e-commerce.onrender.com',
     'raitha-siri-modern-agri-e-commerce-1.onrender.com',
 ]
+    
 ]
 ]
 
