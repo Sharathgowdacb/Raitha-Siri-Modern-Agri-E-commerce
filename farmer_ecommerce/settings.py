@@ -16,7 +16,8 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     'raitha-siri-modern-agri-e-commerce.onrender.com',
-    'raitha-siri-modern-agri-e-commerce-1.onrender.com'
+    'raitha-siri-modern-agri-e-commerce-1.onrender.com',
+]
 ]
 ]
 
