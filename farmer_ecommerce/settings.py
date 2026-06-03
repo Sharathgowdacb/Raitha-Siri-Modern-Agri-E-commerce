@@ -11,11 +11,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
 SECRET_KEY = 'change-me-for-production'
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
-    'raitha-siri-modern-agri-e-commerce.onrender.com'
+    'raitha-siri-modern-agri-e-commerce.onrender.com',
+    'raitha-siri-modern-agri-e-commerce-1.onrender.com'
+]
 ]
 
 # Applications
