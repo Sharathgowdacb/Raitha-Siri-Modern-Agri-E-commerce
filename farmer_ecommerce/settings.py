@@ -1,25 +1,17 @@
-"""
-Django settings for farmer_ecommerce project.
-
-Generated minimal settings tuned for local development and easy static/media setup.
-"""
 from pathlib import Path
 import os
 
-# Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY
 SECRET_KEY = 'change-me-for-production'
+
 DEBUG = False
+
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     'raitha-siri-modern-agri-e-commerce.onrender.com',
     'raitha-siri-modern-agri-e-commerce-1.onrender.com',
-]
-    
-]
 ]
 
 # Applications
